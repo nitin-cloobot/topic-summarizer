@@ -1,0 +1,42 @@
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+  padding: var(--spacing-m);
+  background: var(--color-2);
+  border: 1px solid var(--accent-magenta);
+  border-radius: var(--radius-medium);
+  color: var(--color-7);
+}
+
+.error-message__icon {
+  color: var(--accent-magenta);
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.error-message__text {
+  flex: 1;
+  font-size: 14px;
+}
+
+.error-message__close {
+  background: none;
+  border: none;
+  color: var(--placeholder);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.error-message__close:hover {
+  color: var(--color-7);
+}
+
+.error-message__close .material-symbols-outlined {
+  font-size: 20px;
+}
+

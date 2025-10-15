@@ -1,0 +1,55 @@
+---
+description: Smart documentation workflow for PRD implementation
+globs:
+alwaysApply: true
+---
+
+# Documentation Workflow Manager
+
+## Core Purpose
+Intelligently route requests to the appropriate documentation file based on context and user needs.
+
+## Documentation Files Available
+- **Implementation.md** - Complete implementation plan, tech stack, stages, tasks
+- **project_structure.md** - Folder structure, file organization, module hierarchy  
+- **UI_UX_doc.md** - Design system, components, user flows, accessibility
+- **Bug_Tracking.md** - Issue tracking, bug reports, resolution status
+
+## Smart Routing Logic
+
+### Use Implementation.md when:
+- User asks about project planning, stages, or tasks
+- Questions about tech stack or architecture decisions
+- Need to understand project timeline or dependencies
+- Planning development phases or milestones
+
+### Use project_structure.md when:
+- User asks about file organization or folder structure
+- Questions about where to place new files or components
+- Need to understand module hierarchy or dependencies
+- Planning code organization or refactoring
+
+### Use UI_UX_doc.md when:
+- User asks about design, styling, or visual elements
+- Questions about user interface components or layouts
+- Need to understand design system or branding guidelines
+- Planning UI/UX improvements or new features
+
+### Use Bug_Tracking.md when:
+- User reports bugs or issues
+- Questions about known problems or fixes
+- Need to track issue resolution status
+- Planning bug fixes or quality improvements
+
+## Workflow Rules
+1. **Always read the relevant documentation file first** before responding
+2. **Cross-reference between files** when the request spans multiple areas
+3. **Update documentation** when providing new information or solutions
+4. **Maintain consistency** across all documentation files
+5. **Use context clues** to determine which file(s) are most relevant
+
+## Quick Reference
+- **Planning/Architecture** → Implementation.md
+- **Code Organization** → project_structure.md  
+- **Design/UI** → UI_UX_doc.md
+- **Issues/Bugs** → Bug_Tracking.md

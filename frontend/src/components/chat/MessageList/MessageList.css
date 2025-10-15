@@ -1,0 +1,35 @@
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-l);
+  display: flex;
+  flex-direction: column;
+}
+
+.message-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--placeholder);
+  text-align: center;
+}
+
+.message-list-empty .material-symbols-outlined {
+  font-size: 64px;
+  color: var(--color-4);
+  margin-bottom: var(--spacing-m);
+}
+
+.message-list-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.message-list__loading {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: var(--spacing-m);
+}
+

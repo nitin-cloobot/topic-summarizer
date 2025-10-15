@@ -1,0 +1,62 @@
+.discussion-card {
+  background: var(--color-2);
+  border: 0.5px solid var(--placeholder);
+  border-radius: var(--radius-medium);
+  padding: var(--spacing-l);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.discussion-card:hover {
+  background: var(--color-3);
+  border-color: var(--accent-magenta);
+  transform: translateY(-2px);
+}
+
+.discussion-card__content {
+  margin-bottom: var(--spacing-m);
+}
+
+.discussion-card__title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-7);
+  margin: 0 0 var(--spacing-s) 0;
+}
+
+.discussion-card__description {
+  font-size: 14px;
+  color: var(--placeholder);
+  margin: 0 0 var(--spacing-m) 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.discussion-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+  color: var(--placeholder);
+  font-size: 12px;
+}
+
+.discussion-card__date {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.discussion-card__date .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.discussion-card__actions {
+  display: flex;
+  gap: var(--spacing-s);
+  padding-top: var(--spacing-m);
+  border-top: 0.5px solid var(--color-3);
+}
+

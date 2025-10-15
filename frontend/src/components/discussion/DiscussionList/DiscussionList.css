@@ -1,0 +1,38 @@
+.discussion-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-l);
+}
+
+.discussion-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxl);
+  text-align: center;
+  color: var(--placeholder);
+}
+
+.discussion-list-empty__icon {
+  font-size: 80px;
+  color: var(--color-4);
+  margin-bottom: var(--spacing-l);
+}
+
+.discussion-list-empty h3 {
+  color: var(--color-7);
+  margin-bottom: var(--spacing-s);
+}
+
+.discussion-list-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .discussion-list {
+    grid-template-columns: 1fr;
+  }
+}
+
