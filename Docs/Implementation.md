@@ -1,4 +1,4 @@
-# Implementation Plan for Topic-Based Summarizer MVP
+# Implementation Plan for Topic-Based Summarizer MVP (Extended with Topic Discovery)
 
 ## Feature Analysis
 
@@ -22,16 +22,29 @@
    - Raw-text based AI responses using Gemini 2.5 Flash
    - Integration with existing Gemini API utility
 
-4. **Data Persistence**
-   - SQLite database with three main tables
-   - Discussions, Files, and FileChunks relationships
-   - Local file-based storage
+4. **Topic Discovery Pipeline (NEW)**
+   - Vector embedding generation for all text chunks
+   - Unsupervised clustering of related chunks
+   - LLM-powered topic labeling and metadata generation
+   - Topic directory with frequency-based organization
 
-5. **User Interface**
+5. **Topic Directory Interface (NEW)**
+   - Dedicated topic discovery view
+   - Frequency-based topic sorting
+   - Group by file functionality
+   - Source file attribution for each topic
+
+6. **Data Persistence**
+   - SQLite database with extended schema
+   - Discussions, Files, FileChunks, and Topics relationships
+   - Local file-based storage with embedding support
+
+7. **User Interface**
    - No authentication required
    - Discussion list view as entry point
    - File upload interface with status feedback
    - Chat interface for AI interactions
+   - Topic directory interface for content discovery
 
 ### Feature Categorization:
 
@@ -40,20 +53,28 @@
   - File upload with PDF/DOCX validation
   - File chunking and storage
   - AI Chat interface with Gemini integration
-  - SQLite data persistence
+  - SQLite data persistence with extended schema
   - Basic React UI for all operations
+  - **NEW: Embedding pipeline for text chunks**
+  - **NEW: Clustering algorithm implementation**
+  - **NEW: LLM topic labeling service**
+  - **NEW: Topic directory interface**
 
 - **Should-Have Features:**
   - File upload progress indicators
   - Error handling and user feedback
   - Responsive design
   - File status display in discussions
+  - **NEW: Topic frequency visualization**
+  - **NEW: Group by file view toggle**
 
 - **Nice-to-Have Features:**
   - File preview capabilities
   - Chat history persistence
   - Advanced error recovery
   - Performance optimizations
+  - **NEW: Topic similarity analysis**
+  - **NEW: Advanced clustering visualization**
 
 ## Recommended Tech Stack
 
@@ -84,6 +105,15 @@
 - **CORS Handling:** Flask-CORS - Enable cross-origin requests for React-Flask communication
 - **Environment Management:** python-dotenv - Secure API key management
 - **Documentation:** [PyPDF2 Docs](https://pypdf2.readthedocs.io/), [python-docx Docs](https://python-docx.readthedocs.io/)
+
+### NEW: Topic Discovery Stack:
+
+- **Embedding Model:** sentence-transformers with all-MiniLM-L6-v2 - Lightweight, efficient text embeddings
+- **Clustering Library:** BERTopic - Advanced topic modeling with HDBSCAN clustering
+- **Alternative Clustering:** scikit-learn (k-means, HDBSCAN) - Traditional clustering algorithms
+- **Vector Storage:** NumPy arrays with SQLite BLOB storage - Efficient embedding persistence
+- **Topic Labeling:** Gemini 2.5 Flash API - LLM-powered topic name and metadata generation
+- **Documentation:** [sentence-transformers Docs](https://www.sbert.net/), [BERTopic Docs](https://maartengr.github.io/BERTopic/), [scikit-learn Clustering](https://scikit-learn.org/stable/modules/clustering.html)
 
 ## Implementation Stages
 
@@ -135,11 +165,47 @@
 - [ ] Implement error handling for AI API calls
 - [ ] Test AI responses with sample documents
 
-### Stage 4: Polish & Optimization
+### Stage 4: Topic Discovery Pipeline
 
-**Duration:** 3-4 days
+**Duration:** 6-8 days
 
 **Dependencies:** Stage 3 completion
+
+#### Sub-steps:
+
+- [ ] Install and configure sentence-transformers with all-MiniLM-L6-v2 model
+- [ ] Implement embedding generation service for text chunks
+- [ ] Set up BERTopic clustering pipeline with HDBSCAN
+- [ ] Create embedding storage system in SQLite (BLOB format)
+- [ ] Implement cluster ID assignment to FileChunks table
+- [ ] Develop representative chunk retrieval algorithm (20-50 chunks per cluster)
+- [ ] Create LLM topic labeling service using Gemini API
+- [ ] Implement Topics table with name, keyphrases, synonyms, and frequency
+- [ ] Add topic persistence and metadata storage
+- [ ] Test full pipeline with sample documents
+
+### Stage 5: Topic Directory Interface
+
+**Duration:** 4-5 days
+
+**Dependencies:** Stage 4 completion
+
+#### Sub-steps:
+
+- [ ] Create Topic Directory React component with frequency-based sorting
+- [ ] Implement source file attribution display for each topic
+- [ ] Add "Group by File" toggle functionality
+- [ ] Develop collapsible file sections with topic frequency sorting
+- [ ] Create topic metadata display (keyphrases, synonyms, frequency)
+- [ ] Implement responsive design for topic directory
+- [ ] Add navigation between chat and topic directory views
+- [ ] Test topic directory with various document sets
+
+### Stage 6: Polish & Optimization
+
+**Duration:** 4-5 days
+
+**Dependencies:** Stage 5 completion
 
 #### Sub-steps:
 
@@ -149,6 +215,8 @@
 - [ ] Enhance UI/UX with proper loading states and animations
 - [ ] Implement data validation and sanitization
 - [ ] Add comprehensive testing for all CRUD operations
+- [ ] Test topic discovery pipeline with 20+ diverse files
+- [ ] Optimize embedding and clustering performance
 - [ ] Prepare local deployment documentation
 
 ## Resource Links
@@ -163,6 +231,17 @@
 - [Flask-CORS Documentation](https://flask-cors.readthedocs.io/)
 - [React File Upload Best Practices](https://react.dev/learn/responding-to-events)
 - [SQLite Python Integration Guide](https://docs.python.org/3/library/sqlite3.html)
+
+### NEW: Topic Discovery Resources
+
+- [sentence-transformers Documentation](https://www.sbert.net/)
+- [BERTopic Documentation](https://maartengr.github.io/BERTopic/)
+- [scikit-learn Clustering Documentation](https://scikit-learn.org/stable/modules/clustering.html)
+- [HDBSCAN Documentation](https://hdbscan.readthedocs.io/)
+- [NumPy Documentation](https://numpy.org/doc/)
+- [Topic Modeling Best Practices](https://maartengr.github.io/BERTopic/getting_started/quickstart/quickstart.html)
+- [Text Embedding Tutorial](https://www.sbert.net/docs/quickstart.html)
+- [Clustering Evaluation Metrics](https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation)
 
 ## Technical Architecture Details
 
@@ -189,14 +268,28 @@ CREATE TABLE Files (
     FOREIGN KEY (discussion_id) REFERENCES Discussions(id) ON DELETE CASCADE
 );
 
--- FileChunks table
+-- FileChunks table (Extended for Topic Discovery)
 CREATE TABLE FileChunks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     file_id INTEGER NOT NULL,
     chunk_index INTEGER NOT NULL,
     content TEXT NOT NULL,
+    embedding BLOB,                    -- NEW: Vector embedding storage
+    cluster_id INTEGER,                -- NEW: Cluster assignment
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (file_id) REFERENCES Files(id) ON DELETE CASCADE
+);
+
+-- Topics table (NEW)
+CREATE TABLE Topics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discussion_id INTEGER NOT NULL,
+    name TEXT NOT NULL,                -- LLM-generated topic name
+    keyphrases TEXT,                   -- JSON array of keyphrases
+    synonyms TEXT,                     -- JSON array of synonyms
+    frequency INTEGER DEFAULT 0,       -- Chunk count for this topic
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (discussion_id) REFERENCES Discussions(id) ON DELETE CASCADE
 );
 ```
 
@@ -213,6 +306,12 @@ POST   /api/discussions/:id/files # Upload files to discussion
 GET    /api/discussions/:id/files # List files in discussion
 
 POST   /api/discussions/:id/chat  # Send message to AI chat
+
+# NEW: Topic Discovery Endpoints
+POST   /api/discussions/:id/process-topics  # Trigger topic discovery pipeline
+GET    /api/discussions/:id/topics          # Get all topics for discussion
+GET    /api/discussions/:id/topics/:topic_id # Get specific topic details
+GET    /api/discussions/:id/topics/by-file  # Get topics grouped by file
 ```
 
 ### File Processing Pipeline
@@ -236,6 +335,33 @@ POST   /api/discussions/:id/chat  # Send message to AI chat
    - Combine into context string
    - Send to Gemini API with user query
 
+### NEW: Topic Discovery Pipeline
+
+1. **Embedding Generation**
+   - Process all text chunks through sentence-transformers model
+   - Generate 384-dimensional vector embeddings
+   - Store embeddings as BLOB in FileChunks table
+
+2. **Clustering Process**
+   - Apply BERTopic with HDBSCAN clustering to embeddings
+   - Assign cluster IDs to each chunk
+   - Store cluster_id in FileChunks table
+
+3. **Representative Chunk Selection**
+   - For each cluster, find 20-50 most representative chunks
+   - Use centroid distance or clustering confidence scores
+   - Prepare chunks for LLM topic labeling
+
+4. **LLM Topic Labeling**
+   - Send representative chunks to Gemini API
+   - Generate topic name (≤4 words), keyphrases, and synonyms
+   - Store topic metadata in Topics table
+
+5. **Frequency Calculation**
+   - Count chunks per topic cluster
+   - Update frequency field in Topics table
+   - Enable frequency-based sorting in UI
+
 ## Testing Strategy
 
 ### Unit Tests
@@ -243,12 +369,19 @@ POST   /api/discussions/:id/chat  # Send message to AI chat
 - [ ] Test file upload validation and processing
 - [ ] Test AI API integration and response handling
 - [ ] Test database operations and relationships
+- [ ] **NEW: Test embedding generation for text chunks**
+- [ ] **NEW: Test clustering algorithm accuracy**
+- [ ] **NEW: Test LLM topic labeling service**
+- [ ] **NEW: Test topic frequency calculations**
 
 ### Integration Tests
 - [ ] Test complete file upload to chat workflow
 - [ ] Test AI responses with actual document content
 - [ ] Test error handling and edge cases
 - [ ] Test data persistence across application restarts
+- [ ] **NEW: Test complete topic discovery pipeline**
+- [ ] **NEW: Test topic directory interface functionality**
+- [ ] **NEW: Test group by file view toggle**
 
 ### User Acceptance Tests
 - [ ] Create discussion and upload 2 small test files
@@ -256,6 +389,10 @@ POST   /api/discussions/:id/chat  # Send message to AI chat
 - [ ] Verify AI provides relevant, context-based responses
 - [ ] Test file limit enforcement (31st file rejection)
 - [ ] Test invalid file type rejection
+- [ ] **NEW: Upload 20 diverse files and verify topic discovery**
+- [ ] **NEW: Test topic directory population and sorting**
+- [ ] **NEW: Test frequency-based topic organization**
+- [ ] **NEW: Test group by file functionality**
 
 ## Deployment Considerations
 

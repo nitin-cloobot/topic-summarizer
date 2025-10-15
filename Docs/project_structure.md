@@ -86,6 +86,22 @@ frontend/
 │   │       └── MessageBubble/
 │   │           ├── MessageBubble.jsx
 │   │           └── MessageBubble.css
+│   │   └── topic/              # NEW: Topic discovery components
+│   │       ├── TopicDirectory/
+│   │       │   ├── TopicDirectory.jsx
+│   │       │   └── TopicDirectory.css
+│   │       ├── TopicCard/
+│   │       │   ├── TopicCard.jsx
+│   │       │   └── TopicCard.css
+│   │       ├── TopicList/
+│   │       │   ├── TopicList.jsx
+│   │       │   └── TopicList.css
+│   │       ├── TopicMetadata/
+│   │       │   ├── TopicMetadata.jsx
+│   │       │   └── TopicMetadata.css
+│   │       └── GroupByFileToggle/
+│   │           ├── GroupByFileToggle.jsx
+│   │           └── GroupByFileToggle.css
 │   ├── pages/                  # Main application pages
 │   │   ├── HomePage/
 │   │   │   ├── HomePage.jsx
@@ -101,6 +117,7 @@ frontend/
 │   │   │   ├── discussions.js
 │   │   │   ├── files.js
 │   │   │   ├── chat.js
+│   │   │   ├── topics.js              # NEW: Topic discovery API
 │   │   │   └── index.js
 │   │   ├── utils/
 │   │   │   ├── constants.js
@@ -141,17 +158,22 @@ backend/
 │   │   ├── __init__.py
 │   │   ├── discussion.py
 │   │   ├── file.py
-│   │   └── file_chunk.py
+│   │   ├── file_chunk.py
+│   │   └── topic.py               # NEW: Topic model
 │   ├── routes/                  # API route handlers
 │   │   ├── __init__.py
 │   │   ├── discussions.py
 │   │   ├── files.py
-│   │   └── chat.py
+│   │   ├── chat.py
+│   │   └── topics.py              # NEW: Topic discovery endpoints
 │   ├── services/               # Business logic
 │   │   ├── __init__.py
 │   │   ├── file_processor.py
 │   │   ├── gemini_service.py
-│   │   └── database_service.py
+│   │   ├── database_service.py
+│   │   ├── embedding_service.py      # NEW: Text embedding generation
+│   │   ├── clustering_service.py     # NEW: Topic clustering logic
+│   │   └── topic_labeling_service.py # NEW: LLM topic labeling
 │   ├── utils/                  # Utility functions
 │   │   ├── __init__.py
 │   │   ├── validators.py
@@ -179,7 +201,7 @@ backend/
 │   ├── test_discussions.py
 │   ├── test_files.py
 │   └── test_chat.py
-├── requirements.txt
+├── requirements.txt           # Updated with topic discovery dependencies
 ├── .env                        # Environment variables
 ├── .env.example               # Environment template
 ├── run.py                     # Application entry point
@@ -360,4 +382,49 @@ deployment/
 - Backup encryption: For production data
 - Migration security: Version control
 
-This structure provides a scalable, maintainable foundation for the Topic-Based Summarizer MVP while following best practices for both React and Flask development.
+## NEW: Topic Discovery Dependencies
+
+### Backend Dependencies (requirements.txt additions)
+
+```
+# Topic Discovery Dependencies
+sentence-transformers>=2.2.2
+bertopic>=0.15.0
+scikit-learn>=1.3.0
+hdbscan>=0.8.33
+numpy>=1.24.0
+umap-learn>=0.5.3
+```
+
+### Frontend Dependencies (package.json additions)
+
+```json
+{
+  "dependencies": {
+    "react-router-dom": "^6.8.0",
+    "axios": "^1.3.0"
+  }
+}
+```
+
+### Database Schema Extensions
+
+```sql
+-- Add to existing FileChunks table
+ALTER TABLE FileChunks ADD COLUMN embedding BLOB;
+ALTER TABLE FileChunks ADD COLUMN cluster_id INTEGER;
+
+-- New Topics table
+CREATE TABLE Topics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discussion_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    keyphrases TEXT,
+    synonyms TEXT,
+    frequency INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (discussion_id) REFERENCES Discussions(id) ON DELETE CASCADE
+);
+```
+
+This structure provides a scalable, maintainable foundation for the Topic-Based Summarizer MVP with advanced topic discovery capabilities while following best practices for both React and Flask development.

@@ -149,6 +149,81 @@ This design system is based on **Google Material Design 3** with a **dark mode**
 - **Border Radius**: 20px (capsule shape)
 - **Padding**: 12px horizontal, 8px vertical
 
+### NEW: Topic Directory Interface
+
+#### Topic Directory Container
+- **Background**: Color 1 (`#0D0D0D`) - Base layer
+- **Border**: 0.5px solid Placeholder (`#A8A8A8`)
+- **Border Radius**: 8px
+- **Padding**: 16px
+- **Max Height**: 70vh with scrollable content
+
+#### Topic Cards
+- **Background**: Color 2 (`#1A1A1A`)
+- **Border**: 0.5px solid Placeholder (`#A8A8A8`)
+- **Border Radius**: 8px
+- **Padding**: 16px
+- **Margin**: 8px between cards
+- **Hover**: Background changes to Color 3 (`#262626`)
+
+#### Topic Header
+- **Topic Name**: 
+  - Font: Medium (500), 18px
+  - Color: Color 7 (`#FFFFFF`)
+  - Text: Semi-bold for topic titles
+
+- **Frequency Badge**:
+  - Background: Accent Magenta (`#C82FFF`)
+  - Text: Color 7 (`#FFFFFF`)
+  - Border Radius: 12px (capsule)
+  - Padding: 4px 8px
+  - Font: Regular (400), 12px
+
+#### Topic Metadata
+- **Keyphrases**:
+  - Background: Color 3 (`#262626`)
+  - Text: Color 7 (`#FFFFFF`) with 80% opacity
+  - Border Radius: 4px
+  - Padding: 4px 8px
+  - Font: Regular (400), 12px
+  - Display: Inline tags with 4px spacing
+
+- **Source Files**:
+  - Text: Placeholder color (`#A8A8A8`)
+  - Font: Regular (400), 12px
+  - Icon: `description` (16px)
+  - Display: List with bullet points
+
+#### Group by File Toggle
+- **Toggle Container**:
+  - Background: Color 2 (`#1A1A1A`)
+  - Border: 0.5px solid Placeholder (`#A8A8A8`)
+  - Border Radius: 20px (capsule)
+  - Padding: 8px 16px
+
+- **Toggle Button**:
+  - Active: Accent Magenta (`#C82FFF`)
+  - Inactive: Color 4 (`#333333`)
+  - Text: Color 7 (`#FFFFFF`)
+  - Border Radius: 16px (capsule)
+  - Padding: 6px 12px
+  - Font: Medium (500), 14px
+
+#### File Group Sections
+- **Collapsible Headers**:
+  - Background: Color 3 (`#262626`)
+  - Text: Color 7 (`#FFFFFF`)
+  - Font: Medium (500), 16px
+  - Padding: 12px 16px
+  - Border Radius: 8px
+  - Icon: `expand_more` / `expand_less` (20px)
+
+- **File Topic Lists**:
+  - Background: Color 2 (`#1A1A1A`)
+  - Padding: 12px
+  - Border Radius: 8px
+  - Margin: 8px 0
+
 ## Icons and Visual Elements
 
 ### Icon Guidelines
@@ -166,6 +241,13 @@ This design system is based on **Google Material Design 3** with a **dark mode**
 - **Edit**: `edit` (modify content)
 - **Send**: `send` (chat messages)
 - **File**: `description` (document files)
+- **NEW: Topic Discovery Icons**:
+  - **Topics**: `topic` (topic directory)
+  - **Frequency**: `analytics` (frequency display)
+  - **Group**: `group_work` (group by file)
+  - **Expand**: `expand_more` / `expand_less` (collapsible sections)
+  - **Keyphrases**: `label` (topic metadata)
+  - **Process**: `auto_awesome` (topic discovery pipeline)
 
 ## Layout and Spacing
 
@@ -255,6 +337,16 @@ Select Discussion → Drag & Drop Files → Processing → File List
 Open Chat → Type Question → AI Response → Continue Conversation
 ```
 
+#### 5. Topic Discovery Flow (NEW)
+```
+Upload Files → Process Topics → View Topic Directory → Explore by Frequency/File
+```
+
+#### 6. Topic Directory Navigation (NEW)
+```
+Topic Directory → Toggle Group View → Expand File Sections → View Topic Details
+```
+
 ### Error States and Feedback
 
 #### Success Messages
@@ -295,11 +387,14 @@ Open Chat → Type Question → AI Response → Continue Conversation
 - File Upload Interface
 - Chat Interface
 - Navigation Header
+- **NEW: Topic Directory Interface**
+- **NEW: Topic Discovery Pipeline**
 
 #### Templates
 - Discussion Page Layout
 - Chat Page Layout
 - Settings Page Layout
+- **NEW: Topic Directory Page Layout**
 
 ## Design Tool Integration
 
